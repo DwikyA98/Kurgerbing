@@ -1,14 +1,32 @@
 import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:kurger_bing/screens/EditProfile.dart';
 import '../bloc/cartlistBloc.dart';
 import '../cart.dart';
 import '../const/themeColor.dart';
 import '../model/food_item.dart';
 import 'Login.dart';
 
-class Home extends StatelessWidget {
+final FirebaseAuth _auth = FirebaseAuth.instance;
+final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+var userName = '';
+
+class Home extends StatefulWidget {
+  @override
+  _HomeState createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
   String uid;
+
+  @override
+  void initState() {
+    getUser();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,6 +46,26 @@ class Home extends StatelessWidget {
         ),
       )),
     );
+  }
+
+  Future getUser() async {
+    if (_auth.currentUser != null) {
+      var cellNumber = _auth.currentUser.phoneNumber;
+      cellNumber =
+          '0' + _auth.currentUser.phoneNumber.substring(3, cellNumber.length);
+      debugPrint(cellNumber);
+      await _firestore
+          .collection('users')
+          .where('cellnumber', isEqualTo: cellNumber)
+          .get()
+          .then((result) {
+        if (result.docs.length > 0) {
+          setState(() {
+            userName = result.docs[0].data()['name'];
+          });
+        }
+      });
+    }
   }
 }
 
@@ -326,25 +364,32 @@ class CustomAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final CartListBloc bloc = BlocProvider.getBloc<CartListBloc>();
-    // TODO: implement build
     return Container(
       margin: EdgeInsets.only(bottom: 15),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
+          Text(
+            'Welcome ' + userName,
+            style: TextStyle(fontSize: 30),
+          ),
           Container(
               child: IconButton(
             icon: Icon(Icons.logout),
-            onPressed: () async {
-              await FirebaseAuth.instance.signOut();
-              Navigator.pushAndRemoveUntil(
+            onPressed: () {
+              _auth.signOut().then((value) => Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => LoginScreen()),
-                  (route) => false);
+                  MaterialPageRoute(
+                      builder: (BuildContext context) => LoginScreen())));
             },
           )),
           Container(
-              child: IconButton(icon: Icon(Icons.person), onPressed: () {})),
+              child: IconButton(
+                  icon: Icon(Icons.person),
+                  onPressed: () {
+                    MaterialPageRoute(
+                        builder: (BuildContext context) => EditProfile());
+                  })),
           StreamBuilder(
             stream: bloc.listStream,
             builder: (context, snapshot) {

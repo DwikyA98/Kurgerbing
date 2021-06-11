@@ -49,7 +49,7 @@ class BottomBar extends StatelessWidget {
             height: 1,
             color: Colors.grey[700],
           ),
-          persons(),
+          //persons(),
           nextButtonBar(),
         ],
       ),
