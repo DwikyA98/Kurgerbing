@@ -348,7 +348,7 @@ class _LoginScreenState extends State<LoginScreen> {
       isLoading = true;
     });
 
-    var phoneNumber = '+27 ' + numberController.text.trim();
+    var phoneNumber = '+62 ' + numberController.text.trim();
 
     //first we will check if a user with this cell number exists
     var isValidUser = false;

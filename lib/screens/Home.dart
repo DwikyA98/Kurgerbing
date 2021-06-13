@@ -116,7 +116,7 @@ class FirstHalf extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(35, 25, 0, 0),
+      padding: const EdgeInsets.fromLTRB(10, 25, 0, 0),
       child: Column(
         children: <Widget>[
           CustomAppBar(),
@@ -367,12 +367,8 @@ class CustomAppBar extends StatelessWidget {
     return Container(
       margin: EdgeInsets.only(bottom: 15),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
-          Text(
-            'Welcome ' + userName,
-            style: TextStyle(fontSize: 30),
-          ),
           Container(
               child: IconButton(
             icon: Icon(Icons.logout),
@@ -387,8 +383,10 @@ class CustomAppBar extends StatelessWidget {
               child: IconButton(
                   icon: Icon(Icons.person),
                   onPressed: () {
-                    MaterialPageRoute(
-                        builder: (BuildContext context) => EditProfile());
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (BuildContext context) => EditProfile()));
                   })),
           StreamBuilder(
             stream: bloc.listStream,
