@@ -138,7 +138,9 @@ class _EditProfileState extends State<EditProfile> {
                             color: Colors.black)),
                   ),
                   RaisedButton(
-                    onPressed: () {},
+                    onPressed: () async {
+                      updateUser();
+                    },
                     color: Colors.green,
                     padding: EdgeInsets.symmetric(horizontal: 50),
                     elevation: 2,
@@ -209,6 +211,26 @@ class _EditProfileState extends State<EditProfile> {
           setState(() {
             userName = result.docs[0].data()['name'];
             phoneNumber = result.docs[0].data()['cellnumber'];
+          });
+        }
+      });
+    }
+  }
+
+  Future updateUser() async {
+    if (_auth.currentUser != null) {
+      var cellNumber = _auth.currentUser.phoneNumber;
+      cellNumber =
+          '0' + _auth.currentUser.phoneNumber.substring(3, cellNumber.length);
+      debugPrint(cellNumber);
+      await _firestore
+          .collection('users')
+          .where('cellnumber', isEqualTo: cellNumber)
+          .get()
+          .then((result) {
+        if (result.docs.length > 0) {
+          setState(() {
+            result.docs[0].data()['name'] = userName;
           });
         }
       });
