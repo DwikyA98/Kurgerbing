@@ -58,6 +58,7 @@ class BottomBar extends StatelessWidget {
               children: <Widget>[
                 RaisedButton(
                   onPressed: () {
+                    RemoveAll(foodItems);
                     Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -98,6 +99,12 @@ class BottomBar extends StatelessWidget {
       totalAmount = totalAmount + foodItems[i].price * foodItems[i].quantity;
     }
     return totalAmount.toStringAsFixed(2);
+  }
+
+  void RemoveAll(List<FoodItem> foodItems) {
+    for (int i = 0; i < foodItems.length; i++) {
+      foodItems.removeRange(i, foodItems.length);
+    }
   }
 }
 
