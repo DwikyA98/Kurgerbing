@@ -230,7 +230,7 @@ class _EditProfileState extends State<EditProfile> {
           .then((result) {
         if (result.docs.length > 0) {
           setState(() {
-            result.docs[0].data()['name'] = userName;
+            result.docs[0].data().update('name', (value) => userName);
           });
         }
       });
