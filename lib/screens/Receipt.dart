@@ -1,13 +1,13 @@
 import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:kurger_bing/screens/Receipt.dart';
-import 'bloc/cartlistBloc.dart';
-import 'bloc/listTileColorBloc.dart';
-import 'const/themeColor.dart';
-import 'model/food_item.dart';
+import 'package:kurger_bing/bloc/cartlistBloc.dart';
+import 'package:kurger_bing/bloc/listTileColorBloc.dart';
+import 'package:kurger_bing/const/themeColor.dart';
+import 'package:kurger_bing/model/food_item.dart';
+import 'package:kurger_bing/screens/Home.dart';
 
-class Cart extends StatelessWidget {
+class Receipt extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final CartListBloc bloc = BlocProvider.getBloc<CartListBloc>();
@@ -41,46 +41,34 @@ class BottomBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(left: 35, bottom: 25),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
+        margin: EdgeInsets.only(left: 35, bottom: 25),
+        child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
           totalAmount(foodItems),
           Divider(
             height: 1,
             color: Colors.grey[700],
           ),
           //persons(),
-          RaisedButton(
-            onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (BuildContext context) => Receipt()));
-            },
-            child: Text('BUY IT NOW!'),
+          Container(
+            margin: EdgeInsets.only(right: 25),
+            padding: EdgeInsets.all(25),
+            decoration: BoxDecoration(
+                color: Themes.color, borderRadius: BorderRadius.circular(15)),
+            child: Row(
+              children: <Widget>[
+                RaisedButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (BuildContext context) => Home()));
+                  },
+                  child: Text('Back To Home'),
+                )
+              ],
+            ),
           )
-        ],
-      ),
-    );
-  }
-
-  Container persons() {
-    return Container(
-      margin: EdgeInsets.only(right: 10),
-      padding: EdgeInsets.symmetric(vertical: 30),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Text("Persons",
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w700,
-              )),
-          CustomPersonWidget(),
-        ],
-      ),
-    );
+        ]));
   }
 
   Container totalAmount(List<FoodItem> foodItems) {
@@ -193,25 +181,8 @@ class CartBody extends StatelessWidget {
         children: <Widget>[
           CustomAppBar(),
           title(),
-          Expanded(
-            flex: 1,
-            child: foodItems.length > 0 ? foodItemList() : noItemContainer(),
-          )
+          Expanded(flex: 1, child: foodItemList())
         ],
-      ),
-    );
-  }
-
-  Container noItemContainer() {
-    return Container(
-      child: Center(
-        child: Text(
-          "No More Items Left In The Cart",
-          style: TextStyle(
-              fontWeight: FontWeight.w600,
-              color: Colors.grey[500],
-              fontSize: 20),
-        ),
       ),
     );
   }
@@ -235,14 +206,14 @@ class CartBody extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text(
-                "My",
+                "Thank You For",
                 style: TextStyle(
                   fontWeight: FontWeight.w700,
                   fontSize: 35,
                 ),
               ),
               Text(
-                "Order",
+                "Your Purchase",
                 style: TextStyle(
                   fontWeight: FontWeight.w300,
                   fontSize: 35,
@@ -260,29 +231,6 @@ class CartListItem extends StatelessWidget {
   final FoodItem foodItem;
 
   CartListItem({@required this.foodItem});
-
-  @override
-  Widget build(BuildContext context) {
-    return LongPressDraggable(
-      hapticFeedbackOnStart: false,
-      maxSimultaneousDrags: 1,
-      data: foodItem,
-      feedback: DraggableChildFeedback(foodItem: foodItem),
-      child: DraggableChild(foodItem: foodItem),
-      childWhenDragging: foodItem.quantity > 1
-          ? DraggableChild(foodItem: foodItem)
-          : Container(),
-    );
-  }
-}
-
-class DraggableChild extends StatelessWidget {
-  const DraggableChild({
-    Key key,
-    @required this.foodItem,
-  }) : super(key: key);
-
-  final FoodItem foodItem;
 
   @override
   Widget build(BuildContext context) {
@@ -399,46 +347,7 @@ class CustomAppBar extends StatelessWidget {
             },
           ),
         ),
-        DragTargetWidget(bloc),
       ],
-    );
-  }
-}
-
-class DragTargetWidget extends StatefulWidget {
-  final CartListBloc bloc;
-
-  DragTargetWidget(this.bloc);
-
-  @override
-  _DragTargetWidgetState createState() => _DragTargetWidgetState();
-}
-
-class _DragTargetWidgetState extends State<DragTargetWidget> {
-  @override
-  Widget build(BuildContext context) {
-    FoodItem currentFoodItem;
-    final ColorBloc colorBloc = BlocProvider.getBloc<ColorBloc>();
-
-    return DragTarget<FoodItem>(
-      onAccept: (FoodItem foodItem) {
-        currentFoodItem = foodItem;
-        colorBloc.setColor(Colors.white);
-        widget.bloc.removeFromList(currentFoodItem);
-      },
-      onWillAccept: (FoodItem foodItem) {
-        colorBloc.setColor(Colors.red);
-        return true;
-      },
-      builder: (BuildContext context, List incoming, List rejected) {
-        return Padding(
-          padding: const EdgeInsets.all(5.0),
-          child: Icon(
-            CupertinoIcons.delete,
-            size: 35,
-          ),
-        );
-      },
     );
   }
 }

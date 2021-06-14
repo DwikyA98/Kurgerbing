@@ -116,15 +116,15 @@ class FirstHalf extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(10, 25, 0, 0),
+      padding: const EdgeInsets.fromLTRB(15, 25, 0, 0),
       child: Column(
         children: <Widget>[
           CustomAppBar(),
           //you could also use the spacer widget to give uneven distances, i just decided to go with a sizebox
-          SizedBox(height: 30),
+          SizedBox(height: 0),
           title(),
-          SizedBox(height: 30),
-          searchBar(),
+          SizedBox(height: 0),
+          //searchBar(),
         ],
       ),
     );
@@ -148,8 +148,8 @@ class Items extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double containerPadding = 45;
-    double containerBorderRadius = 10;
+    double containerPadding = 0;
+    double containerBorderRadius = 0;
 
     return Column(
       children: <Widget>[
@@ -161,8 +161,8 @@ class Items extends StatelessWidget {
           child: Column(
             children: <Widget>[
               Container(
-                width: double.infinity,
-                height: 200,
+                width: 400,
+                height: 400,
                 decoration:
                     BoxDecoration(borderRadius: BorderRadius.circular(10)),
                 child: ClipRRect(
@@ -183,8 +183,8 @@ class Items extends StatelessWidget {
               SizedBox(height: 20),
               Container(
                   padding: EdgeInsets.only(
-                    left: leftAligned ? 20 : 0,
-                    right: leftAligned ? 0 : 20,
+                    left: leftAligned ? 0 : 0,
+                    right: leftAligned ? 0 : 0,
                   ),
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -221,7 +221,7 @@ class Items extends StatelessWidget {
                                 ]),
                           ),
                         ),
-                        SizedBox(height: containerPadding),
+                        SizedBox(height: 20),
                       ])),
             ],
           ),
@@ -344,14 +344,14 @@ Widget title() {
             "Food",
             style: TextStyle(
               fontWeight: FontWeight.w700,
-              fontSize: 30,
+              fontSize: 50,
             ),
           ),
           Text(
             "Delivery",
             style: TextStyle(
               fontWeight: FontWeight.w200,
-              fontSize: 30,
+              fontSize: 60,
             ),
           ),
         ],
@@ -367,8 +367,12 @@ class CustomAppBar extends StatelessWidget {
     return Container(
       margin: EdgeInsets.only(bottom: 15),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
+          Text(
+            'Welcome ' + userName,
+            style: TextStyle(fontSize: 30),
+          ),
           Container(
               child: IconButton(
             icon: Icon(Icons.logout),
@@ -380,9 +384,9 @@ class CustomAppBar extends StatelessWidget {
             },
           )),
           Container(
-              child: IconButton(
-                  icon: Icon(Icons.person),
-                  onPressed: () {
+              child: GestureDetector(
+                  child: Icon(Icons.person),
+                  onTap: () {
                     Navigator.push(
                         context,
                         MaterialPageRoute(

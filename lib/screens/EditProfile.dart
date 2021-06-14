@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:kurger_bing/screens/Setting.dart';
 
+import 'Home.dart';
+
 final FirebaseAuth _auth = FirebaseAuth.instance;
 final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 var userName = '';
@@ -35,7 +37,8 @@ class _EditProfileState extends State<EditProfile> {
             color: Colors.green,
           ),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.of(context).push(
+                MaterialPageRoute(builder: (BuildContext context) => Home()));
           },
         ),
         actions: [
