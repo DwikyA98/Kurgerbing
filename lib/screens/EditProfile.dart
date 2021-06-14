@@ -9,6 +9,7 @@ final FirebaseAuth _auth = FirebaseAuth.instance;
 final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 var userName = '';
 var phoneNumber = '';
+final TextEditingController nameController = new TextEditingController();
 
 class EditProfile extends StatefulWidget {
   const EditProfile({Key key}) : super(key: key);
@@ -27,6 +28,7 @@ class _EditProfileState extends State<EditProfile> {
 
   @override
   Widget build(BuildContext context) {
+    final node = FocusScope.of(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -118,7 +120,25 @@ class _EditProfileState extends State<EditProfile> {
               SizedBox(
                 height: 35,
               ),
-              buildTextField("Full Name", userName, false),
+              Container(
+                  child: Padding(
+                padding: const EdgeInsets.symmetric(
+                    vertical: 10.0, horizontal: 10.0),
+                child: TextFormField(
+                  keyboardType: TextInputType.phone,
+                  controller: nameController,
+                  textInputAction: TextInputAction.done,
+                  onFieldSubmitted: (_) => node.unfocus(),
+                  decoration: InputDecoration(
+                      floatingLabelBehavior: FloatingLabelBehavior.never,
+                      labelText: userName),
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return userName;
+                    }
+                  },
+                ),
+              )),
               buildTextField("Phone Number", phoneNumber, false),
               SizedBox(
                 height: 35,
@@ -131,7 +151,7 @@ class _EditProfileState extends State<EditProfile> {
                       updateUser();
                     },
                     color: Colors.green,
-                    padding: EdgeInsets.symmetric(horizontal: 50),
+                    padding: EdgeInsets.symmetric(horizontal: 70),
                     elevation: 2,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20)),
@@ -156,7 +176,7 @@ class _EditProfileState extends State<EditProfile> {
       String labelText, String placeholder, bool isPasswordTextField) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 35.0),
-      child: TextField(
+      child: TextFormField(
         obscureText: isPasswordTextField ? showPassword : false,
         decoration: InputDecoration(
             suffixIcon: isPasswordTextField
@@ -214,15 +234,12 @@ class _EditProfileState extends State<EditProfile> {
       debugPrint(cellNumber);
       await _firestore
           .collection('users')
-          .where('cellnumber', isEqualTo: cellNumber)
-          .get()
-          .then((result) {
-        if (result.docs.length > 0) {
-          setState(() {
-            result.docs[0].data().update('name', (value) => userName);
-          });
-        }
-      });
+          .doc(_auth.currentUser.uid)
+          .update({
+            'name': nameController.text.trim(),
+          })
+          .then((_) => print('Success'))
+          .catchError((error) => print('Failed: $error'));
     }
   }
 }
