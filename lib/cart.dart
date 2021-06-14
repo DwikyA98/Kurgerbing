@@ -51,15 +51,20 @@ class BottomBar extends StatelessWidget {
             color: Colors.grey[700],
           ),
           //persons(),
-          RaisedButton(
-            onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (BuildContext context) => Receipt()));
-            },
-            child: Text('BUY IT NOW!'),
-          )
+          FlatButton(
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) => Receipt()));
+              },
+              child: Text(
+                'Place Order',
+                style: TextStyle(fontSize: 35, fontWeight: FontWeight.w500),
+              ),
+              color: Color(0xfffeb324),
+              minWidth: 500,
+              height: 75)
         ],
       ),
     );

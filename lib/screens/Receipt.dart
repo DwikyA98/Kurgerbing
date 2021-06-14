@@ -56,16 +56,22 @@ class BottomBar extends StatelessWidget {
                 color: Themes.color, borderRadius: BorderRadius.circular(15)),
             child: Row(
               children: <Widget>[
-                RaisedButton(
-                  onPressed: () {
-                    RemoveAll(foodItems);
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (BuildContext context) => Home()));
-                  },
-                  child: Text('Back To Home'),
-                )
+                FlatButton(
+                    onPressed: () {
+                      RemoveAll(foodItems);
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (BuildContext context) => Home()));
+                    },
+                    child: Text(
+                      'Back To Home',
+                      style:
+                          TextStyle(fontSize: 35, fontWeight: FontWeight.w500),
+                    ),
+                    color: Color(0xfffeb324),
+                    minWidth: 430,
+                    height: 75)
               ],
             ),
           )
